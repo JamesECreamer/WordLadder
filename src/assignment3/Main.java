@@ -1,9 +1,8 @@
 /* WORD LADDER Main.java
  * EE422C Project 3 submission by
- * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
+ * Aditya Kharosekar
+ * amk3587
+ * 16465
  * <Student2 Name>
  * <Student2 EID>
  * <Student2 5-digit Unique No.>
@@ -14,15 +13,13 @@
 
 
 package assignment3;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 
 public class Main {
 	
 	// static variables and constants only here.
-	public static Set<String> dict = makeDictionary();
-	public static ArrayList<ArrayList<String>> buckets = new ArrayList<ArrayList<String>>();
-	
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -37,26 +34,17 @@ public class Main {
 			kb = new Scanner(System.in);// default from Stdin
 			ps = System.out;			// default to Stdout
 		}
-		initialize();
-		
-		// TODO methods to read in words, output ladder
+
+		//initialize();
+		ArrayList<String> bob = getWordLadderBFS("STONE", "MONEY");
+        System.out.println(bob);
+        // TODO methods to read in words, output ladder
 	}
 	
 	public static void initialize() {
 		// initialize your static variables or constants here.
 		// We will call this method before running our JUNIT tests.  So call it 
 		// only once at the start of main.
-		String dictWord = "";
-		if(dict.iterator().hasNext()){
-			dictWord = dict.iterator().next();
-		}
-		
-		for(int j=0; j < dictWord.length(); j++){
-			ArrayList<String> temp = new ArrayList<String>(1);
-			temp.add("a");
-			buckets.add(j, temp);
-		}
-		
 	}
 	
 	/**
@@ -69,67 +57,96 @@ public class Main {
 		return null;
 	}
 	
-	public static boolean distanceOne(String start, String word){
-		int count = 0;
-		if(start.length() != word.length()){
-			return false;
-		}
-		for(int i=0; i < start.length(); i++){
-			if(start.charAt(i) != word.charAt(i)){
-				count++;
-			}
-		}
-		if(count == 1){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
 		
 		// Returned list should be ordered start to end.  Include start and end.
 		// Return empty list if no ladder.
 		// TODO some code
-		String dictWord;
-		// Base case
-		if(start.equals(end)){
-			ArrayList<String> result = new ArrayList<>(1);
-			result.add(start);
-			return result;
-		}
-		// if there is a next word get the next word from dict
-		if(dict.iterator().hasNext()){
-			dictWord = dict.iterator().next();
-		} else {
-			return null;
-		}
-		//if dictWord is one letter off
-		if(distanceOne(start, dictWord)){
-			ArrayList<String> result = getWordLadderDFS(dictWord, end);
-		}
-		//if(result == null){
-			//there is no path
-		//}
-		
-		return null; // replace this line later with real return
-	}
-	
-    public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		
-		// TODO some code
 		Set<String> dict = makeDictionary();
 		// TODO more code
-			
-			if(dict.iterator().hasNext()){
-				//dictWord = dict.iterator().next();
-			} else {
-				//return null;
-			}
 		
 		return null; // replace this line later with real return
 	}
-    
+
+    /**
+     * We use a queue, and each element of this queue will be an ArrayList.
+     * Each element of this queue will be a possible path from the start word to the end word
+     * @param start
+     * @param end
+     * @return
+     */
+    public static ArrayList<String> getWordLadderBFS(String start, String end) {
+		Set<String> dict = makeDictionary();
+        ArrayList<String> path = new ArrayList<>();
+        path.add(start);
+        Queue<ArrayList<String>> queue = new LinkedList<>();
+        queue.add(path);
+
+        /*As we are going through the entire dictionary, we don't want to hit the start word again */
+        dict.remove(start);
+
+        while (!queue.isEmpty() && !getLastWord(queue.peek()).equals(end)) {//while queue is not empty and
+                                                                            //head element does not contain end word
+
+            ArrayList<String> ladder = queue.remove();
+
+            if (getLastWord(ladder).equals(end)) {  //we have found destination word
+                return ladder;
+            }
+            Iterator<String> iterator = dict.iterator();
+            while (iterator.hasNext()) {
+                String string = iterator.next();
+
+                if (differByOne(string, getLastWord(ladder))) {
+                    ArrayList<String> list = new ArrayList<>(ladder);
+                    list.add(string);
+
+                    queue.add(list);
+
+                    iterator.remove();
+                }
+            }
+
+        }
+
+        if (!queue.isEmpty()) {
+            return queue.peek();
+        }
+        else {
+            return null;
+        }
+	}
+
+    /**
+     * Returns last word of current arraylist. Useful to see if you have reached end word
+     * @param s arraylist containing current word ladder
+     * @return last word of arraylist
+     */
+    public static String getLastWord(ArrayList<String> s) {
+        int i = s.size();
+        return s.get(i-1);
+    }
+
+    /**
+     * Checks if two words are off by 1 character
+     * @param word word found in dictionary
+     * @param ladderLast word at the end of current path
+     * @return true if words are off by 1 character
+     */
+    public static boolean differByOne(String word, String ladderLast) {
+        if (word.length()!=ladderLast.length()) {
+            return false;
+        }
+        int count = 0;
+        for (int i=0; i<word.length(); i++) {
+            if (word.charAt(i)!=ladderLast.charAt(i)) {
+                count++;
+            }
+        }
+        return (count==1);
+    }
+
+
 	public static Set<String>  makeDictionary () {
 		Set<String> words = new HashSet<String>();
 		Scanner infile = null;
@@ -147,12 +164,7 @@ public class Main {
 	}
 	
 	public static void printLadder(ArrayList<String> ladder) {
-		//after finding no ladder put check inside array list
-		//print no ladder found
-		System.out.println("a " + ladder.size() + "-rung word ladder exists between " + ladder.get(0) + " and " + ladder.get(ladder.size() - 1));
-		for(int i = 0; i < ladder.size(); i++){
-			System.out.println(ladder.get(i));
-		}
+		
 	}
 	// TODO
 	// Other private static methods here
