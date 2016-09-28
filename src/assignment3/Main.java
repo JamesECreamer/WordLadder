@@ -3,11 +3,11 @@
  * Aditya Kharosekar
  * amk3587
  * 16465
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
+ * James Creamer
+ * jec3875
+ * 16475
  * Slip days used: <0>
- * Git URL:
+ * Git URL: https://github.com/JamesECreamer/WordLadder
  * Fall 2016
  */
 
