@@ -18,7 +18,7 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-	
+
 	// static variables and constants only here.
 	static Set<String> dict = makeDictionary();
 	static Set<Word> wordDictionary = new HashSet<Word>();
@@ -42,7 +42,7 @@ public class Main {
         System.out.println(bob);
         // TODO methods to read in words, output ladder
 	}
-	
+
 	public static void dictWordDictionary(Set<String> dictionary){
 		Iterator<String> iterator = dictionary.iterator();
         while (iterator.hasNext()) {
@@ -113,7 +113,7 @@ public class Main {
 		 *  return start
 		 *  base case
 		 */
-		if(start == end){
+		if(start.equals(end)){
 			ArrayList<String> result = new ArrayList<String>();
 			result.add(start);
 			return result;
