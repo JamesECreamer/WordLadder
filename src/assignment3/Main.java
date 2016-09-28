@@ -17,6 +17,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 
+
 public class Main {
 	
 	// static variables and constants only here.
@@ -153,6 +154,7 @@ public class Main {
         for (int i=0; i<mutants.size(); i++) {
         	ArrayList<String> result = getWordLadderDFS(mutants.get(i).word, end);
         	if(result != null){
+        		start = start.toLowerCase();
         		result.add(0, start);
         		return result;
         	}
@@ -185,8 +187,10 @@ public class Main {
             ArrayList<String> ladder = queue.remove();
 
             if (getLastWord(ladder).equals(end)) {  //we have found destination word
-
-				return ladder;
+            	for(int i=0; i<ladder.size(); i++){
+            		ladder.set(i, ladder.get(i).toLowerCase());
+            	}
+                return ladder;
             }
             Iterator<String> iterator = dict.iterator();
             while (iterator.hasNext()) {
@@ -205,6 +209,9 @@ public class Main {
         }
 
         if (!queue.isEmpty()) {
+        	for(int i=0; i<queue.peek().size(); i++){
+        		queue.peek().set(i, queue.peek().get(i).toLowerCase());
+        	}
             return queue.peek();
         }
         else {
