@@ -53,8 +53,31 @@ public class Main {
 	 * If command is /quit, return empty ArrayList. 
 	 */
 	public static ArrayList<String> parse(Scanner keyboard) {
-		// TO DO
-		return null;
+		ArrayList<String> parameters = new ArrayList<String>(2);
+		parameters.add(keyboard.next());
+		if(parameters.get(0).equals("/quit")){
+			ArrayList<String> empty = new ArrayList<String>();
+			return empty;
+		}
+		parameters.add(keyboard.nextLine());
+		return parameters;
+	}
+	
+	public static boolean distanceOne(String start, String word){
+		int count = 0;
+		if(start.length() != word.length()){
+			return false;
+		}
+		for(int i=0; i < start.length(); i++){
+			if(start.charAt(i) != word.charAt(i)){
+				count++;
+			}
+		}
+		if(count == 1){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
