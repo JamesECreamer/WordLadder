@@ -42,10 +42,6 @@ public class Main {
 		if (inputs.size()==0) {	//if user has entered "/quit"
 			System.exit(0);
 		}
-		if (inputs.size()==1) {
-			System.out.println("You only entered one number");
-			System.exit(0);
-		}
         //it only gets here once user has entered two valid words
 		ArrayList<String> bob = getWordLadderDFS(inputs.get(0), inputs.get(1));
         System.out.println(bob);
