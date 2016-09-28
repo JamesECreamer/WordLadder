@@ -79,7 +79,7 @@ public class Main {
 			return new ArrayList<String>();
 		}
 
-		String secondWord = keyboard.nextLine().trim();
+		String secondWord = keyboard.next().trim();
         secondWord = secondWord.toUpperCase();
 		parameters.add(secondWord);
 		return parameters;
