@@ -37,8 +37,16 @@ public class Main {
 			ps = System.out;			// default to Stdout
 		}
 		initialize();
-		ArrayList<String> inputs = parse(kb);
-		ArrayList<String> bob = getWordLadderDFS("MONEY", "DEATH");
+        ArrayList<String> inputs = parse(kb);
+		if (inputs.size()==0) {	//if user has entered "/quit"
+			System.exit(0);
+		}
+		if (inputs.size()==1) {
+			System.out.println("You only entered one number");
+			System.exit(0);
+		}
+        //it only gets here once user has entered two valid words
+		ArrayList<String> bob = getWordLadderDFS(inputs.get(0), inputs.get(1));
         System.out.println(bob);
         //printLadder(bob);
 	}
@@ -62,12 +70,17 @@ public class Main {
 	 */
 	public static ArrayList<String> parse(Scanner keyboard) {
 		ArrayList<String> parameters = new ArrayList<String>(2);
-		parameters.add(keyboard.next());
-		if(parameters.get(0).equals("/quit")){
-			ArrayList<String> empty = new ArrayList<String>();
-			return empty;
+		String firstWord = keyboard.next();
+        firstWord = firstWord.toUpperCase();
+		parameters.add(firstWord);
+
+		if(parameters.get(0).equals("/QUIT")){
+			return new ArrayList<String>();
 		}
-		parameters.add(keyboard.nextLine());
+
+		String secondWord = keyboard.nextLine().trim();
+        secondWord = secondWord.toUpperCase();
+		parameters.add(secondWord);
 		return parameters;
 	}
 	
@@ -122,7 +135,7 @@ public class Main {
 		int count = 0;
         while (iterator.hasNext()) {
             Word nextWord = iterator.next();
-            if(nextWord.visited == false){
+            if(!nextWord.visited){
             	if(differByOne(nextWord.word, start)){
 	            	mutants.add(nextWord);
 	            	nextWord.visited = true;
@@ -172,7 +185,8 @@ public class Main {
             ArrayList<String> ladder = queue.remove();
 
             if (getLastWord(ladder).equals(end)) {  //we have found destination word
-                return ladder;
+
+				return ladder;
             }
             Iterator<String> iterator = dict.iterator();
             while (iterator.hasNext()) {
