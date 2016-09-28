@@ -120,6 +120,7 @@ public class Main {
 		 */
 		if(start.equals(end)){
 			ArrayList<String> result = new ArrayList<String>();
+			start = start.toLowerCase();
 			result.add(start);
 			return result;
 		}
