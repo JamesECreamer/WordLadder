@@ -20,6 +20,8 @@ import java.io.*;
 public class Main {
 	
 	// static variables and constants only here.
+	static Set<String> dict = makeDictionary();
+	static Set<Word> wordDictionary = new HashSet<Word>();
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -35,16 +37,22 @@ public class Main {
 			ps = System.out;			// default to Stdout
 		}
 
-		//initialize();
-		ArrayList<String> bob = getWordLadderBFS("STONE", "MONEY");
+		initialize();
+		ArrayList<String> bob = getWordLadderDFS("STONE", "MONEY");
         System.out.println(bob);
         // TODO methods to read in words, output ladder
 	}
 	
+	public static void dictWordDictionary(Set<String> dictionary){
+		Iterator<String> iterator = dictionary.iterator();
+        while (iterator.hasNext()) {
+            String s = iterator.next();
+            wordDictionary.add(new Word(s));
+        }
+	}
+	
 	public static void initialize() {
-		// initialize your static variables or constants here.
-		// We will call this method before running our JUNIT tests.  So call it 
-		// only once at the start of main.
+		dictWordDictionary(dict);
 	}
 	
 	/**
@@ -80,15 +88,65 @@ public class Main {
 		}
 	}
 	
+	/*
+	PSEUDOCODE
+    If (start==end) {
+        you're done. return start
+    }
+    Find all mutants of start. Store into ArrayList
+    If (num of new mutants==0) {
+        you have reached a dead end. return null
+    }
+    for (int i=0; i<mutants.length; i++) {
+        arraylist<String> result = Recursively call on (mutant[i], end)
+        if (result!=null) {
+            Return an arraylist which consists of - adding start to the front of result
+    }   
+     */
+	
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
 		
 		// Returned list should be ordered start to end.  Include start and end.
 		// Return empty list if no ladder.
-		// TODO some code
-		Set<String> dict = makeDictionary();
-		// TODO more code
 		
-		return null; // replace this line later with real return
+		/*  if you have reached end
+		 *  return start
+		 *  base case
+		 */
+		if(start == end){
+			ArrayList<String> result = new ArrayList<String>();
+			result.add(start);
+			return result;
+		}
+		
+		ArrayList<Word> mutants = new ArrayList<Word>();
+		Iterator<Word> iterator = wordDictionary.iterator();
+		int count = 0;
+        while (iterator.hasNext()) {
+            Word nextWord = iterator.next();
+            if(nextWord.visited == false){
+            	if(differByOne(nextWord.word, start)){
+	            	mutants.add(nextWord);
+	            	nextWord.visited = true;
+	            	count += 1;
+            	}
+            }
+        }
+        
+        //if no mutants found
+        if(count == 0){
+        	return null;
+        }
+        
+        for (int i=0; i<mutants.size(); i++) {
+        	ArrayList<String> result = getWordLadderDFS(mutants.get(i).word, end);
+        	if(result != null){
+        		result.add(0, start);
+        		return result;
+        	}
+        }
+		
+        return null; //no path has been found
 	}
 
     /**
