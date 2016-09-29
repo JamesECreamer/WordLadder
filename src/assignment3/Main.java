@@ -23,6 +23,8 @@ public class Main {
 	// static variables and constants only here.
 	static Set<String> dict = makeDictionary();
 	static Set<Word> wordDictionary = new HashSet<Word>();
+	static String startWord = new String();
+	static String endWord = new String();
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -44,8 +46,7 @@ public class Main {
 		}
         //it only gets here once user has entered two valid words
 		ArrayList<String> bob = getWordLadderDFS(inputs.get(0), inputs.get(1));
-        System.out.println(bob);
-        //printLadder(bob);
+        printLadder(bob);
 	}
 	
 	public static void dictWordDictionary(Set<String> dictionary){
@@ -57,6 +58,7 @@ public class Main {
 	}
 	
 	public static void initialize() {
+
 		dictWordDictionary(dict);
 	}
 	
@@ -78,30 +80,11 @@ public class Main {
 		String secondWord = keyboard.next().trim();
         secondWord = secondWord.toUpperCase();
 		parameters.add(secondWord);
+        startWord = parameters.get(0);//in case
+        endWord = parameters.get(1);
 		return parameters;
 	}
-	
-	/**
-	 * @param start word to be compared to "word"
-	 * @param word word to be compared to "start
-	 * @return true if only one word is different false otherwise
-	 */
-	public static boolean distanceOne(String start, String word){
-		int count = 0;
-		if(start.length() != word.length()){
-			return false;
-		}
-		for(int i=0; i < start.length(); i++){
-			if(start.charAt(i) != word.charAt(i)){
-				count++;
-			}
-		}
-		if(count == 1){
-			return true;
-		} else {
-			return false;
-		}
-	}
+
 	
 	/**
 	 * @param start starting word of the word ladder
@@ -157,8 +140,8 @@ public class Main {
         	}
         }
 		
-      //no path has been found
-        return null; 
+      //no path has been found. Return ArrayList
+        return new ArrayList<>();
 	}
 
     /**
@@ -212,7 +195,7 @@ public class Main {
             return queue.peek();
         }
         else {
-            return null;
+            return new ArrayList<>();
         }
 	}
 
@@ -221,7 +204,7 @@ public class Main {
      * @param s arraylist containing current word ladder
      * @return last word of arraylist
      */
-    public static String getLastWord(ArrayList<String> s) {
+    private static String getLastWord(ArrayList<String> s) {
         int i = s.size();
         return s.get(i-1);
     }
@@ -232,7 +215,7 @@ public class Main {
      * @param ladderLast word at the end of current path
      * @return true if words are off by 1 character
      */
-    public static boolean differByOne(String word, String ladderLast) {
+    private static boolean differByOne(String word, String ladderLast) {
         if (word.length()!=ladderLast.length()) {
             return false;
         }
@@ -263,6 +246,14 @@ public class Main {
 	}
 	
 	public static void printLadder(ArrayList<String> ladder) {
-		
-	}
+        if (ladder.size() == 0) {//no such ladder exists
+            System.out.println("no word ladder can be found between " + startWord.toLowerCase() + " and " + endWord.toLowerCase() + ".");
+        } else {
+            System.out.println("a " + (ladder.size()-2) + "-rung ladder exists between " + startWord.toLowerCase() + " and " + endWord.toLowerCase() + ".");
+            for (int i = 0; i < ladder.size(); i++) {
+                System.out.println(ladder.get(i).toLowerCase());
+            }
+            //System.out.println(endWord);
+        }
+    }
 }
